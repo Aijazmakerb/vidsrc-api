@@ -1,0 +1,18 @@
+{
+  "name": "vidsrc-api",
+  "version": "1.0.0",
+  "description": "An api that scrapes vidsrc.to",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12",
+    "express": "^4.18.2",
+    "html-entities": "^2.4.0"
+  }
+}
