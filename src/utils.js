@@ -69,7 +69,7 @@ function keyPermutation(key, data) {
 }
 
 export async function encodeId(v_id) {
-    const response = await axios.get('https://raw.githubusercontent.com/Tommy0412/worstsource-keys/keys/keys.json');
+    const response = await axios.get('https://raw.githubusercontent.com/Ciarands/worstsource-keys/keys/keys.json');
     const [key1, key2] = await response.data;
     const decoded_id = keyPermutation(key1, v_id).toString('latin1');
     const encoded_result = keyPermutation(key2, decoded_id).toString('latin1');
