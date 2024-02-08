@@ -52,7 +52,7 @@ app.get('/:movieTMDBid', async(req, res) => {
         subtitles = await subtitlesFetch.data;
     }
 
-    const response = await axios.get(`https://vidplay.site/mediainfo/${data}?${vidplayLink.split('?')[1]}&autostart=true`, {
+    const response = await axios.get(`https://vidplay.online/mediainfo/${data}?${vidplayLink.split('?')[1]}&autostart=true`, {
         params: {
             v: Date.now().toString(),
         },
@@ -110,7 +110,7 @@ app.get('/:showTMDBid/:seasonNum/:episodeNum', async(req, res) => {
         subtitles = await subtitlesFetch.data;
     }
 
-    const response = await axios.get(`https://vidplay.site/mediainfo/${data}?${vidplayLink.split('?')[1]}&autostart=true`, {
+    const response = await axios.get(`https://vidplay.online/mediainfo/${data}?${vidplayLink.split('?')[1]}&autostart=true`, {
         params: {
             v: Date.now().toString(),
         },
