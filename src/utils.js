@@ -78,7 +78,7 @@ export async function encodeId(v_id) {
 }
 
 export async function getFutoken(key, url) {
-    const response = await axios.get("https://vidplay.site/futoken", { headers: { "Referer": url } });
+    const response = await axios.get("https://vidplay.online/futoken", { headers: { "Referer": url } });
     const fuKey = response.data.match(/var\s+k\s*=\s*'([^']+)'/)[1];
     const fuToken = `${fuKey},${Array.from({ length: key.length }, (_, i) => (fuKey.charCodeAt(i % fuKey.length) + key.charCodeAt(i)).toString()).join(',')}`;
     return fuToken;
