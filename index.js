@@ -1,10 +1,19 @@
 import express from "express";
+import { vidsrcBase } from "./src/common.js";
+import { load } from "cheerio";
 import { getVidsrcMovieSourcesId, getVidsrcShowSourcesId, getVidsrcSourceDetails, getVidsrcSources } from "./src/main.js";
 import { encodeId, getFutoken } from "./src/utils.js";
 import axios from "axios";
+import randomUseragent from 'random-useragent';
 
 const app = express()
-const port = 3000
+const port = 3001
+
+randomUseragent.getRandom();
+//console.log(randomUseragent)
+
+var ip = (Math.floor(Math.random() * 255) + 1)+"."+(Math.floor(Math.random() * 255))+"."+(Math.floor(Math.random() * 255))+"."+(Math.floor(Math.random() * 255));
+//console.log(ip)
 
 app.use(function (req, res, next) {
     if (req.originalUrl && req.originalUrl.split("/").pop() === 'favicon.ico') {
@@ -15,12 +24,12 @@ app.use(function (req, res, next) {
 
 app.get('/', (req, res) => {
     res.status(200).json({
-        intro: "Welcome to the unofficial vidsrc provider: check the provider website @ https://vidsrc.to/ ",
+        intro: "Unofficial vidsrc.to API",
         routes: {
             movie: "/:movieTMDBid",
             show: "/:showTMDBid/:seasonNumber/:episodeNumber"
         },
-        author: "This api is developed and created by AijaZ"
+        author: "by AijaZ"
     })
 })
 
@@ -45,11 +54,16 @@ app.get('/:movieTMDBid', async(req, res) => {
     const data = await getFutoken(key, vidplayLink);
 
     let subtitles;
-    if(vidplayLink.includes('sub.info='))
+    //if(vidplayLink.includes('sub.info='))
     {
-        const subtitleLink = vidplayLink.split('?sub.info=')[1].split('&')[0];
-        const subtitlesFetch = await axios.get(decodeURIComponent(subtitleLink));
+        //const subtitleLink = vidplayLink.split('?sub.info=')[1].split('&')[0];
+        //const subtitlesFetch = await axios.get(decodeURIComponent(subtitleLink));
+		const data = await axios.get(`${vidsrcBase}/embed/movie/${movieId}`);
+		const doc = load(data.data);
+        const sourcesCode = doc('a[data-id]').attr('data-id');
+        const subtitlesFetch = await axios.get(`https://vidsrc.to/ajax/embed/episode/${sourcesCode}/subtitles`);
         subtitles = await subtitlesFetch.data;
+		//console.log(sourcesCode)
     }
 
     const response = await axios.get(`https://vidplay.online/mediainfo/${data}?${vidplayLink.split('?')[1]}&autostart=true`, {
@@ -57,7 +71,10 @@ app.get('/:movieTMDBid', async(req, res) => {
             v: Date.now().toString(),
         },
         headers: {
-            "Referer": vidplayLink
+			"Origin": ip,
+            "Referer": vidplayLink,
+			"Host": "vidplay.online",
+			"User-Agent": randomUseragent
         }
     });
 
@@ -83,7 +100,7 @@ app.get('/:showTMDBid/:seasonNum/:episodeNum', async(req, res) => {
     const seasonNum = req.params.seasonNum;
     const episodeNum = req.params.episodeNum;
 
-    console.log(showTMDBid,seasonNum,episodeNum)
+    //console.log(showTMDBid,seasonNum,episodeNum)
 
     const sourcesId = await getVidsrcShowSourcesId(showTMDBid, seasonNum, episodeNum);
     if(!sourcesId) res.status(404).send({
@@ -103,10 +120,14 @@ app.get('/:showTMDBid/:seasonNum/:episodeNum', async(req, res) => {
     const data = await getFutoken(key, vidplayLink);
 
     let subtitles;
-    if(vidplayLink.includes('sub.info='))
+    //if(vidplayLink.includes('sub.info='))
     {
-        const subtitleLink = vidplayLink.split('?sub.info=')[1].split('&')[0];
-        const subtitlesFetch = await axios.get(decodeURIComponent(subtitleLink));
+        //const subtitleLink = vidplayLink.split('?sub.info=')[1].split('&')[0];
+        //const subtitlesFetch = await axios.get(decodeURIComponent(subtitleLink));
+		const data = await axios.get(`${vidsrcBase}/embed/tv/${showTMDBid}/${seasonNum}/${episodeNum}`);
+        const doc = load(data.data);
+        const sourcesCode = doc('a[data-id]').attr('data-id');
+        const subtitlesFetch = await axios.get(`https://vidsrc.to/ajax/embed/episode/${sourcesCode}/subtitles`);
         subtitles = await subtitlesFetch.data;
     }
 
@@ -115,7 +136,10 @@ app.get('/:showTMDBid/:seasonNum/:episodeNum', async(req, res) => {
             v: Date.now().toString(),
         },
         headers: {
-            "Referer": vidplayLink
+			"Origin": ip,
+            "Referer": vidplayLink,
+			"Host": "vidplay.online",
+			"User-Agent": randomUseragent
         }
     });
 
