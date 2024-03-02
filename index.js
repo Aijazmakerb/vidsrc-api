@@ -7,7 +7,7 @@ import axios from "axios";
 import randomUseragent from 'random-useragent';
 
 const app = express()
-const port = 3001
+const port = 3000
 
 randomUseragent.getRandom();
 //console.log(randomUseragent)
