@@ -1,11 +1,11 @@
 {
   "name": "vidsrc-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An api that scrapes vidsrc.to",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "install": "npm install",
+    "install": "npm i",
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -16,8 +16,6 @@
     "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.2",
     "html-entities": "^2.4.0",
-    "nodemon": "^3.0.2",
-    "pkg": "^5.8.1",
     "random-useragent": "^0.5.0"
   }
 }
