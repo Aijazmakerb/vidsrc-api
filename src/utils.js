@@ -69,9 +69,11 @@ function keyPermutation(key, data) {
 }
 
 export async function encodeId(v_id) {
-    const response = await axios.get('https://raw.githubusercontent.com/Ciarands/vidsrc-keys/main/keys.json');
-    //const response = await axios.get('https://github.com/Ciarands/vidsrc-keys/blob/main/keys.json');
-    const [key1, key2] = await response.data;
+    const response = await axios.get('https://github.com/Ciarands/vidsrc-keys/blob/main/keys.json');
+    //const response = await axios.get('https://raw.githubusercontent.com/Ciarands/vidsrc-keys/main/keys.json');
+    //const [key1, key2] = await response.data;
+	const rawLines = response.data.match(/"rawLines":\s*\[([\s\S]*?)\]/)[1];
+	const [key1, key2] = JSON.parse(`${rawLines.substring(1).replace(/\\"/g, '"')}]`);
     const decoded_id = keyPermutation(key1, v_id).toString('latin1');
     const encoded_result = keyPermutation(key2, decoded_id).toString('latin1');
     const encoded_base64 = btoa(encoded_result);
