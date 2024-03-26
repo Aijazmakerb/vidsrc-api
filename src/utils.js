@@ -1,5 +1,6 @@
 import axios from "axios";
 import { decode } from "html-entities";
+import { vidsrcBase } from "./common.js";
 
 export function adecode(str) {
     const keyBytes = Buffer.from('8z5Ag5wgagfsOuhz', 'utf-8');
@@ -41,57 +42,14 @@ export function decryptSourceUrl(sourceUrl) {
     return decode(decodedText);
 }
 
-function keyPermutation(key, data) {
-    var state = Array.from(Array(256).keys());
-    var index_1 = 0;
-    for (var i = 0; i < 256; i++) {
-        index_1 = ((index_1 + state[i]) + key.charCodeAt(i % key.length)) % 256;
-        var temp = state[i];
-        state[i] = state[index_1];
-        state[index_1] = temp;
-    }
-    var index_1 = 0;
-    var index_2 = 0;
-    var final_key = '';
-    for (var char = 0; char < data.length; char++) {
-        index_1 = (index_1 + 1) % 256;
-        index_2 = (index_2 + state[index_1]) % 256;
-        var temp = state[index_1];
-        state[index_1] = state[index_2];
-        state[index_2] = temp;
-        if (typeof data[char] === 'string') {
-            final_key += String.fromCharCode(data[char].charCodeAt(0) ^ state[(state[index_1] + state[index_2]) % 256]);
-        } else if (typeof data[char] === 'number') {
-            final_key += String.fromCharCode(data[char] ^ state[(state[index_1] + state[index_2]) % 256]);
-        }
-    }
-    return final_key;
-}
-
-export async function encodeId(v_id) {
-    const response = await axios.get('https://raw.githubusercontent.com/Claudemirovsky/worstsource-keys/keys/keys.json');
-    const [key1, key2] = await response.data;
-    const decoded_id = keyPermutation(key1, v_id).toString('latin1');
-    const encoded_result = keyPermutation(key2, decoded_id).toString('latin1');
-    const encoded_base64 = btoa(encoded_result);
-    return encoded_base64.replace('/', '_');
-}
-
-export async function getFutoken(key, url) {
-    const response = await axios.get("https://vidplay.site/futoken", { headers: { "Referer": url } });
-    const fuKey = response.data.match(/var\s+k\s*=\s*'([^']+)'/)[1];
-    const fuToken = `${fuKey},${Array.from({ length: key.length }, (_, i) => (fuKey.charCodeAt(i % fuKey.length) + key.charCodeAt(i)).toString()).join(',')}`;
-    return fuToken;
-}
-
 export async function getSourceUrl(sourceId) {
-    const response = await axios.get(`https://vidsrc.to/ajax/embed/source/${sourceId}`);
+    const response = await axios.get(`${vidsrcBase}/ajax/embed/source/${sourceId}`);
     const encryptedSourceUrl = response.data.result?.url;
     return this.decryptSourceUrl(encryptedSourceUrl);
 }
 
 export async function getSources(dataId) {
-    const response = await axios.get(`https://vidsrc.to/ajax/embed/episode/${dataId}/sources`);
+    const response = await axios.get(`${vidsrcBase}/ajax/embed/episode/${dataId}/sources`);
     const data = response.data.result;
     return data.reduce((acc, video) => {
         acc[video.title] = video.id;
