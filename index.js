@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
         intro: "Welcome to the unofficial vidsrc provider: check the provider website @ https://vidsrc.to/ ",
         routes: {
             movie: "/:movieTMDBid",
-            show: "/:showTMDBid/:seasonNumber/:episodeNumber"
+            show: "/:showTMDBid?s=seasonNumber&e=episodeNumber"
         },
         author: "This api is developed and created by AijaZ"
     })
