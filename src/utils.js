@@ -1,4 +1,3 @@
-import axios from "axios";
 import { decode } from "html-entities";
 import { vidsrcBase } from "./common.js";
 
@@ -43,14 +42,14 @@ export function decryptSourceUrl(sourceUrl) {
 }
 
 export async function getSourceUrl(sourceId) {
-    const response = await axios.get(`${vidsrcBase}/ajax/embed/source/${sourceId}`);
-    const encryptedSourceUrl = response.data.result?.url;
+    const response = await (await fetch(`${vidsrcBase}/ajax/embed/source/${sourceId}`.json()));
+    const encryptedSourceUrl = response.result?.url;
     return this.decryptSourceUrl(encryptedSourceUrl);
 }
 
 export async function getSources(dataId) {
-    const response = await axios.get(`${vidsrcBase}/ajax/embed/episode/${dataId}/sources`);
-    const data = response.data.result;
+    const response = await (await fetch(`${vidsrcBase}/ajax/embed/episode/${dataId}/sources`)).json();
+    const data = response.result;
     return data.reduce((acc, video) => {
         acc[video.title] = video.id;
         return acc;
