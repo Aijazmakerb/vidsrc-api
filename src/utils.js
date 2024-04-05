@@ -2,7 +2,7 @@ import axios from "axios";
 import { decode } from "html-entities";
 
 export function adecode(str) {
-    const keyBytes = Buffer.from('8z5Ag5wgagfsOuhz', 'utf-8');
+    const keyBytes = Buffer.from('WXrUARXb1aDLaZjI', 'utf-8');
     let j = 0;
     const s = Buffer.from(Array(256).fill().map((_, i) => i));
 
@@ -72,8 +72,8 @@ export async function encodeId(v_id) {
     const response = await axios.get('https://github.com/Ciarands/vidsrc-keys/blob/main/keys.json');
     //const response = await axios.get('https://raw.githubusercontent.com/Ciarands/vidsrc-keys/main/keys.json');
     //const [key1, key2] = await response.data;
-	const rawLines = response.data.match(/"rawLines":\s*\[([\s\S]*?)\]/)[1];
-	const [key1, key2] = JSON.parse(`${rawLines.substring(1).replace(/\\"/g, '"')}]`);
+    const rawLines = response.data.match(/"rawLines":\s*\[([\s\S]*?)\]/)[1];
+    const [key1, key2] = JSON.parse(`${rawLines.substring(1).replace(/\\"/g, '"')}]`);
     const decoded_id = keyPermutation(key1, v_id).toString('latin1');
     const encoded_result = keyPermutation(key2, decoded_id).toString('latin1');
     const encoded_base64 = btoa(encoded_result);
