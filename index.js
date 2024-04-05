@@ -15,12 +15,12 @@ randomUseragent.getRandom();
 var ip = (Math.floor(Math.random() * 255) + 1)+"."+(Math.floor(Math.random() * 255))+"."+(Math.floor(Math.random() * 255))+"."+(Math.floor(Math.random() * 255));
 //console.log(ip)
 
-app.use(function (req, res, next) {
-    if (req.originalUrl && req.originalUrl.split("/").pop() === 'favicon.ico') {
-        return res.sendStatus(204);
-    }
-    next();
-});
+//app.use(function (req, res, next) {
+    //if (req.originalUrl && req.originalUrl.split("/").pop() === 'favicon.ico') {
+        //return res.sendStatus(204);
+    //}
+    //next();
+//});
 
 app.get('/', (req, res) => {
     res.status(200).json({
@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
             movie: "/:movieTMDBid",
             show: "/:showTMDBid/:seasonNumber/:episodeNumber"
         },
-        author: "by AijaZ"
+        author: "AijaZ & Tommy0412"
     })
 })
 
