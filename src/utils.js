@@ -2,7 +2,7 @@ import { decode } from "html-entities";
 import { vidsrcBase } from "./common.js";
 
 export function adecode(str) {
-    const keyBytes = Buffer.from('8z5Ag5wgagfsOuhz', 'utf-8');
+    const keyBytes = Buffer.from('WXrUARXb1aDLaZjI', 'utf-8');
     let j = 0;
     const s = Buffer.from(Array(256).fill().map((_, i) => i));
 
