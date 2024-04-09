@@ -1,10 +1,9 @@
 import express from "express";
 import { getVidsrcSourcesId, getVidsrcSourceDetails, getVidsrcSources, getSubtitles } from "./src/hooks.js";
-import { encodeId, generateRandomIp, getFutoken } from "./src/vidplay/utils.js";
-import randomUserAgent from 'random-useragent';
+import { encodeId, generateRandomIp, generateRandomUserAgent ,getFutoken } from "./src/vidplay/utils.js";
 
 const app = express()
-const port = 3000
+const port = 3000;
 
 app.get('/', (req, res) => {
     res.status(200).json({
@@ -48,7 +47,7 @@ app.get('/:tmdbId', async(req, res) => {
             "Origin": generateRandomIp(),
             "Referer": vidplayLink,
             "Host": "vidplay.online",
-            "User-Agent": randomUserAgent
+            "User-Agent": generateRandomUserAgent()
         }
     })).json();
 
@@ -65,7 +64,9 @@ app.get('/:tmdbId', async(req, res) => {
     })
 
     res.status(200).json({
-        source, subtitles
+        source: source,
+        referer: vidplayLink.split('?')[0],
+        subtitles: subtitles
     })
 })
 

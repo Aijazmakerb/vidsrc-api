@@ -1,4 +1,5 @@
 import { vidplayBase } from "./common.js";
+import randomUseragent from 'random-useragent';
 
 // This file is based on https://github.com/Ciarands/vidsrc-to-resolver/blob/dffa45e726a4b944cb9af0c9e7630476c93c0213/vidsrc.py#L16
 // Full credits to @Ciarands!
@@ -21,6 +22,10 @@ export async function getFutoken(key, url) {
 
 export const generateRandomIp = () => {
     return (Math.floor(Math.random() * 255) + 1)+"."+(Math.floor(Math.random() * 255))+"."+(Math.floor(Math.random() * 255))+"."+(Math.floor(Math.random() * 255));
+}
+
+export const generateRandomUserAgent = () => {
+    return randomUseragent.getRandom();
 }
 
 function keyPermutation(key, data) {
