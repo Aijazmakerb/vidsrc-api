@@ -1,1 +1,0 @@
-export const vidplayBase = 'https://vidplay.online';
