@@ -1,6 +1,6 @@
 ### USAGE
 - base url:
-  https://vidsrc-api-two.vercel.app
+  https://your-domain.com/
 
 - endpoint:
   - `/{db_id}`
