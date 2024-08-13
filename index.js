@@ -1,6 +1,7 @@
 import express from "express";
 import { vidsrcBase } from "./src/common.js";
 import { getVidsrcSourcesId, getVidsrcSources } from "./src/hooks.js";
+
 const app = express();
 const port = 3000;
 
@@ -31,17 +32,33 @@ app.get("/:tmdbId", async (req, res) => {
     return;
   }
 
-  const sources = await getVidsrcSources(sourcesId);
+  const sources = await getVidsrcSources(sourcesId, season, episode);
 
-  const upcloud = sources.data.find((v) => v.name.toLowerCase() === "upcloud");
+  const servers = sources.data.filter((v) => v.name.toLowerCase() !== "vidsrc");
 
-  if (!upcloud) res.status(404).json("upcloud stream not found for vidsrc");
+  if (!servers)
+    res.status(404).json({
+      status: 404,
+      response: "No streaming servers found",
+    });
 
-  const upcloudLink = await (
-    await fetch(`${vidsrcBase}/api/source/${upcloud["hash"]}`)
-  ).json();
+  const [server1, server2] = await Promise.all([
+    (async () => {
+      return await (
+        await fetch(`${vidsrcBase}/api/source/${servers[0]["hash"]}`)
+      ).json();
+    })(),
+    (async () => {
+      return await (
+        await fetch(`${vidsrcBase}/api/source/${servers[1]["hash"]}`)
+      ).json();
+    })(),
+  ]);
 
-  res.status(200).json(upcloudLink.data);
+  res.status(200).json({
+    [servers[0].name]: server1.data,
+    [servers[1].name]: server2.data,
+  });
 });
 
 app.listen(port, () => {
